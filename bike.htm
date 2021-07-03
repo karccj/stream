@@ -100,9 +100,46 @@ body {
   </tr>
 
   <tr>
-    <td><iframe width="640" height="360" src="https://www.youtube.com/embed/1stIHnRBovA?mute=1" 
-    title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; 
-    encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <td>
+	<script src="https://www.youtube.com/iframe_api"></script>
+        <div id="player"></div>
+<script>
+var player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '390',
+    width: '640',
+    videoId: getVideoId('https://www.youtube.com/watch?v=M7lc1UVf-VE'),
+    playerVars:{
+      autoplay:1,
+      controls:0,
+      start:30
+    },
+    events: {
+      'onReady': onPlayerReady
+    }
+  });
+}
+
+function onPlayerReady() {
+   player.playVideo();
+}
+
+function getVideoId(u){
+  var v, vid;
+  if(u.indexOf('?v=')!=-1){
+    v = u.split('?v=');
+    if(v[1].indexOf('&')!=-1){
+      vid = v[1].split('&')[0];
+    }else{
+      vid = v[1];
+    }
+    return vid;
+  }else{
+    return u;
+  }
+}  
+</script> 
      </td>
   </tr>
 	  
