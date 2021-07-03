@@ -99,7 +99,52 @@ body {
      </td>
   </tr>
 
-  <tr><td><h2>5 BIKE-6</h2></td></tr>
+  <tr><td><h2>6 BIKE-7</h2></td></tr>
+  <tr><td>
+	<script src="https://www.youtube.com/iframe_api"></script>
+        <div id="player"></div>
+<script>
+var player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    width: '640',
+    height: '360',
+   
+    videoId: getVideoId('https://www.youtube.com/watch?v=4WWGWOA9WRU'),
+    playerVars:{
+      autoplay:0,
+      modestbranding: 0,
+      controls:0,
+      start:30
+    },
+    events: {
+	    'onReady': onPlayerReady
+	             }
+  });
+}
+
+function onPlayerReady() {
+   player.playVideo();
+}
+
+function getVideoId(u){
+  var v, vid;
+  if(u.indexOf('?v=')!=-1){
+    v = u.split('?v=');
+    if(v[1].indexOf('&')!=-1){
+      vid = v[1].split('&')[0];
+    }else{
+      vid = v[1];
+    }
+    return vid;
+  }else{
+    return u;
+  }
+}  
+</script> 
+     </td></tr>
+	  
+	  <tr><td><h2>7 BIKE-7</h2></td></tr>
   <tr><td>
 	<script src="https://www.youtube.com/iframe_api"></script>
         <div id="player"></div>
