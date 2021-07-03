@@ -114,12 +114,14 @@ function onYouTubeIframeAPIReady() {
     videoId: getVideoId('https://www.youtube.com/embed/1stIHnRBovA'),
     playerVars:{
       autoplay:0,
+      modestbranding: 0,
       controls:0,
       start:30
     },
     events: {
-      'onReady': onPlayerReady
-    }
+	    'onReady': onPlayerReady
+	     e.target.mute();
+         }
   });
 }
 
