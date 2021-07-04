@@ -19,7 +19,7 @@ function onYouTubeIframeAPIReady() {
     width: '560', // 播放器寬度 (px)
     height: '360', // 播放器高度 (px)
     playerVars: {
-      autoplay: 0, // 自動播放影片
+      autoplay: 1, // 自動播放影片
       controls: 0, // 顯示播放器
       showinfo: 0, // 隱藏影片標題
       modestbranding: 1, // 隱藏YouTube Logo
@@ -28,7 +28,7 @@ function onYouTubeIframeAPIReady() {
       fs: 1, // 隱藏全螢幕按鈕
       cc_load_policty: 0, // 隱藏字幕
       iv_load_policy: 3, // 隱藏影片註解
-      autohide: 1 // 影片播放時，隱藏影片控制列
+      autohide: 0 // 影片播放時，隱藏影片控制列
     },
     events: {
       onReady: function (e) {
