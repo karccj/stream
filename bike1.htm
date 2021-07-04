@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>BIKE1</title> 
+</head>
+<body>
+<style>
+iframe{
+  pointer-events: none;
+  width:100vw;
+  height:100vh;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div id="YouTubeVideoPlayerAPI"></div>
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-8216c69d01441f36c0ea791ae2d4469f0f8ff5326f00ae2d00e4bb7d20e24edb.js"></script>
+
+  <script src='https://www.youtube.com/iframe_api'></script>
+      <script id="rendered-js" >
+function onYouTubeIframeAPIReady() {
+  var player;
+  player = new YT.Player('YouTubeVideoPlayerAPI', {
+    videoId: 'rshfNb2ped8', // YouTube 影片ID
+    width: '1080', // 播放器寬度 (px)
+    height: '720', // 播放器高度 (px)
+    playerVars: {
+      autoplay: 1, // 自動播放影片
+      controls: 0, // 顯示播放器
+      showinfo: 0, // 隱藏影片標題
+      modestbranding: 0, // 隱藏YouTube Logo
+      loop: 1, // 重覆播放
+      playlist: 'rshfNb2ped8', // 當使用影片要重覆播放時，需再輸入YouTube 影片ID
+      fs: 0, // 隱藏全螢幕按鈕
+      cc_load_policty: 0, // 隱藏字幕
+      iv_load_policy: 3, // 隱藏影片註解
+      autohide: 0 // 影片播放時，隱藏影片控制列
+    },
+    events: {
+      onReady: function (e) {
+        e.target.mute(); //播放時靜音
+        e.target.playVideo(); //強制播放(手機才會自動播放，但僅限於Android)
+      } } });
+
+
+}
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
+  
+</html>
+
+
+
+
