@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code 生成器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        /* 樣式設定 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f8ff;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #0066cc;
+            margin-bottom: 1rem;
+        }
+        label, select, input, textarea {
+            width: 100%;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        input, select, textarea, button {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #0066cc;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004d99;
+        }
+        .input-container {
+            display: none;
+        }
+        canvas {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .footer {
+            margin-top: 1rem;
+            color: #777;
+            font-size: 0.8rem;
+        }body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f8ff;
+    margin: 0;
+    color: #333;
+}
+
+.container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    color: #0066cc;
+    margin-bottom: 1rem;
+}
+
+label, select, input, textarea {
+    width: 100%;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #0066cc;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin: 5px 0;
+}
+
+button:hover {
+    background-color: #004d99;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.input-container {
+    display: none;
+}
+
+canvas {
+    margin-top: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.footer {
+    margin-top: 1rem;
+    color: #777;
+    font-size: 0.8rem;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code 生成器</h1>
+        
+        <label for="mode">選擇生成模式：</label>
+        <select id="mode" onchange="toggleInputFields()">
+            <option value="text">文本</option>
+            <option value="wifi">Wi-Fi</option>
+            <option value="map">地圖位置</option>
+            <option value="app">應用程式</option>
+            <option value="tel">電話號碼</option>
+            <option value="email">電子郵件</option>
+            <option value="contact">聯絡人</option>
+        </select>
+
+        <!-- 各模式的輸入欄位 -->
+        <div id="text-input-container" class="input-container">
+            <textarea id="text-input" rows="3" placeholder="輸入文字以生成 QR Code"></textarea>
+        </div>
+
+        <div id="wifi-input-container" class="input-container">
+            <input type="text" id="ssid" placeholder="Wi-Fi 名稱 (SSID)">
+            <input type="password" id="password" placeholder="Wi-Fi 密碼">
+            <label><input type="checkbox" id="hidden"> 隱藏 SSID</label>
+        </div>
+
+        <div id="map-input-container" class="input-container">
+            <input type="text" id="location" placeholder="輸入地址或經緯度">
+        </div>
+
+        <div id="app-input-container" class="input-container">
+            <input type="text" id="app-link" placeholder="輸入應用程式鏈接">
+        </div>
+
+        <div id="tel-input-container" class="input-container">
+            <input type="text" id="tel" placeholder="輸入電話號碼">
+        </div>
+
+        <div id="email-input-container" class="input-container">
+            <input type="email" id="email" placeholder="輸入電子郵件地址">
+        </div>
+
+        <div id="contact-input-container" class="input-container">
+            <input type="text" id="contact-name" placeholder="姓名">
+            <input type="text" id="contact-phone" placeholder="電話">
+            <input type="email" id="contact-email" placeholder="電子郵件">
+            <input type="date" id="contact-birthday" placeholder="生日">
+        </div>
+
+        <!-- 標題輸入框和生成、下載按鈕 -->
+        <label for="title">輸入標題以加入圖片：</label>
+        <input type="text" id="title" placeholder="輸入 QR Code 標題">
+
+        <button onclick="generateQRCode()">生成 QR Code</button>
+        <canvas id="qr-code"></canvas>
+        
+        <button onclick="downloadQRCode()">下載 QR Code</button>
+        <button onclick="printQRCode()">列印 QR Code</button><button onclick="shareQRCode()">分享 QR Code</button>
+        <div class="footer">掃描 QR Code 以快速分享您的資訊</div>
+    </div>
+
+    <script>// 分享 QR Code 的功能
+async function shareQRCode() {
+    const title = document.getElementById("title").value.trim();
+    if (!title) { alert("請輸入標題"); return; }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 400;
+    canvas.height = 450;
+    const context = canvas.getContext("2d");
+
+    // 設定背景顏色和圓角邊框
+    context.fillStyle = "#f0f8ff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.strokeStyle = "#0066cc";
+    context.lineWidth = 4;
+    context.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+
+    // 標題樣式
+    context.fillStyle = "#333";
+    context.font = "bold 22px Arial";
+    context.textAlign = "center";
+    context.fillText(title, canvas.width / 2, 50);
+
+    // 加入裝飾性分隔線
+    context.strokeStyle = "#888";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(50, 70);
+    context.lineTo(canvas.width - 50, 70);
+    context.stroke();
+
+    // QR Code 圖片
+    const qrCanvas = document.getElementById("qr-code");
+    context.drawImage(qrCanvas, 100, 100, 200, 200);
+
+    // 確認瀏覽器支援 navigator.share
+    if (navigator.share) {
+        // 轉換圖片為 Blob 格式，以便分享
+        canvas.toBlob(async function(blob) {
+            const file = new File([blob], `${title}.png`, { type: 'image/png' });
+            try {
+                await navigator.share({
+                    title: title,
+                    text: `這是 ${title} 的 QR Code`,
+                    files: [file],
+                });
+            } catch (error) {
+                console.error("分享失敗:", error);
+                alert("分享失敗");
+            }
+        }, 'image/png');
+    } else {
+        alert("您的裝置不支援分享功能");
+    }
+}
+// 列印 QR Code（符合 A4 紙的大小）
+function printQRCode() {
+    const title = document.getElementById("title").value.trim();
+    if (!title) { alert("請輸入標題"); return; }
+
+    const canvas = document.createElement("canvas");
+    // 設定 Canvas 為 A4 大小，595 x 842px（A4 72 DPI）
+    canvas.width = 595;
+    canvas.height = 842;
+    const context = canvas.getContext("2d");
+
+    // 設定背景顏色
+    context.fillStyle = "#f0f8ff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 設定邊框和樣式
+    context.strokeStyle = "#0066cc";
+    context.lineWidth = 4;
+    context.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+    // 設定標題樣式
+    context.fillStyle = "#333";
+    context.font = "bold 24px Arial";
+    context.textAlign = "center";
+    context.fillText(title, canvas.width / 2, 80);
+
+    // 添加分隔線
+    context.strokeStyle = "#888";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(50, 120);
+    context.lineTo(canvas.width - 50, 120);
+    context.stroke();
+
+    // 將 QR Code 圖片加入
+    const qrCanvas = document.getElementById("qr-code");
+    context.drawImage(qrCanvas, 100, 150, 400, 400);  // 調整 QR Code 大小，使其適應 A4
+
+    // 打開新頁面進行列印
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>QR Code 列印</title>');
+    printWindow.document.write('<style>body { font-family: Arial, sans-serif; margin: 0; padding: 0; }');
+    printWindow.document.write('@page { size: A4; margin: 0; }');
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write('<h2 style="text-align: center;">' + title + '</h2>');
+    printWindow.document.write('<img src="' + canvas.toDataURL("image/png") + '" style="width: 100%; max-width: 100%; height: auto;" />');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();  // 必須調用，避免彈窗無法顯示
+    printWindow.print();
+}
+        // 控制輸入欄位顯示的函數
+        function toggleInputFields() {
+            const mode = document.getElementById("mode").value;
+            const containers = document.querySelectorAll('.input-container');
+            containers.forEach(container => container.style.display = 'none');
+            document.getElementById(`${mode}-input-container`).style.display = 'block';
+        }
+
+        // 生成 QR Code
+        function generateQRCode() {
+            const mode = document.getElementById("mode").value;
+            let qrText = "";
+
+            if (mode === "text") {
+                qrText = document.getElementById("text-input").value.trim();
+                if (!qrText) { alert("請輸入文字內容"); return; }
+            } else if (mode === "wifi") {
+                const ssid = document.getElementById("ssid").value.trim();
+                const password = document.getElementById("password").value.trim();
+                const hidden = document.getElementById("hidden").checked ? "true" : "false";
+                if (!ssid) { alert("請輸入 Wi-Fi 名稱 (SSID)"); return; }
+                qrText = `WIFI:T:WPA;S:${ssid};P:${password};H:${hidden};;`;
+            } else if (mode === "map") {
+                const location = document.getElementById("location").value.trim();
+                if (!location) { alert("請輸入地點"); return; }
+                qrText = `https://www.google.com/maps?q=${encodeURIComponent(location)}`;
+            } else if (mode === "app") {
+                const appLink = document.getElementById("app-link").value.trim();
+                if (!appLink) { alert("請輸入應用程式鏈接"); return; }
+                qrText = appLink;
+            } else if (mode === "tel") {
+                const tel = document.getElementById("tel").value.trim();
+                if (!tel) { alert("請輸入電話號碼"); return; }
+                qrText = `tel:${tel}`;
+            } else if (mode === "email") {
+                const email = document.getElementById("email").value.trim();
+                if (!email) { alert("請輸入電子郵件地址"); return; }
+                qrText = `mailto:${email}`;
+            } else if (mode === "contact") {
+                const name = document.getElementById("contact-name").value.trim();
+                const phone = document.getElementById("contact-phone").value.trim();
+                const email = document.getElementById("contact-email").value.trim();
+                const birthday = document.getElementById("contact-birthday").value.trim();
+                if (!name || !phone || !email || !birthday) { alert("請輸入完整聯絡人資訊"); return; }
+                qrText = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nBDAY:${birthday}\nEND:VCARD`;
+            }
+
+            const qr = new QRious({
+                element: document.getElementById("qr-code"),
+                value: qrText,
+                size: 200
+            });
+        }
+
+        // 下載 QR Code 的功能
+        function downloadQRCode() {
+            const title = document.getElementById("title").value.trim();
+            if (!title) { alert("請輸入標題"); return; }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = 300;
+            canvas.height = 340;
+            const context = canvas.getContext("2d");
+
+            // 背景顏色
+            context.fillStyle = "#f8f9fa";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 標題樣式
+            context.fillStyle = "#333";
+            context.font = "bold 18px Arial";
+            context.textAlign = "center";
+            context.fillText(title, canvas.width / 2, 30);
+
+            // QR Code 圖片
+            const qrCanvas = document.getElementById("qr-code");
+            context.drawImage(qrCanvas, 50, 50, 200, 200);
+// 下載圖片
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `${title}.png`;
+            link.click();
+        }function downloadQRCode() {
+            const title = document.getElementById("title").value.trim();
+            if (!title) { alert("請輸入標題"); return; }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = 400;
+            canvas.height = 450;
+            const context = canvas.getContext("2d");
+
+            // 設定背景顏色和圓角邊框
+            context.fillStyle = "#f0f8ff";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.strokeStyle = "#0066cc";
+            context.lineWidth = 4;
+            context.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+
+            // 標題樣式
+            context.fillStyle = "#333";
+            context.font = "bold 22px Arial";
+            context.textAlign = "center";
+            context.fillText(title, canvas.width / 2, 50);
+
+            // 加入裝飾性分隔線
+            context.strokeStyle = "#888";
+            context.lineWidth = 1;
+            context.beginPath();
+            context.moveTo(50, 70);
+            context.lineTo(canvas.width - 50, 70);
+            context.stroke();
+
+            // QR Code 圖片
+            const qrCanvas = document.getElementById("qr-code");
+            context.drawImage(qrCanvas, 100, 100, 200, 200);
+
+            // 圖片外框
+            context.strokeStyle = "#0066cc";
+            context.lineWidth = 3;
+            context.strokeRect(100, 100, 200, 200);
+
+            // 下載圖片
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `${title}.png`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
